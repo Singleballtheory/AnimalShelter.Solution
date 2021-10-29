@@ -19,9 +19,26 @@ namespace AnimalShelter.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Creature>>> Get()
+    public async Task<ActionResult<IEnumerable<Creature>>> Get(string name, string spieces, string mythical)
     {
-      return await _db.Creatures.ToListAsync();
+      var query = _db.Creatures.AsQueryable();
+
+      if (name != null)
+      {
+        query = query.Where(entry => entry.Name == name);
+      }
+
+      if (spieces != null)
+      {
+        query = query.Where(entry => entry.Spieces == spieces);
+      }
+
+      if (mythical != null)
+      {
+        query = query.Where(entry => entry.Mythical == mythical);
+      }
+
+      return await query.ToListAsync();
     }
 
     [HttpGet("{id}")]
